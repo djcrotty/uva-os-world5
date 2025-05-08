@@ -207,7 +207,7 @@ int main(int argc, char *argv[]) {
 
   while (!is_end) {
     SDL_Event ev;
-    while (0) { /* STUDENT_TODO: replace this */
+    while (SDL_PollEvent(&ev, evflags)) { /* STUDENT_TODO: replace this */
       if (ev.type == SDL_KEYDOWN) {   
         switch (ev.key.keysym.sym) {
           case SDLK_MINUS:  if (volume >= 8) volume -= 8; break;

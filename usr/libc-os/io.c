@@ -105,6 +105,31 @@ int read_kb_event(int events, int *evtype, unsigned int *scancode) {
 
      
     /* STUDENT_TODO: your code here */
+    int fd = open("/dev/events", O_RDONLY);
+    if (fd < 0) {
+        printf("Failed to open /dev/events\n");
+        return -1;
+    }
+
+    n = read(fd, buf, LINESIZE - 1);
+    if (n <= 0) {
+        printf("Failed to read from /dev/events\n");
+        close(fd);
+        return -1;
+    }
+    buf[n] = '\0'; // Null-terminate the buffer
+
+    s=buf;         
+    if (buf[0]=='k' && buf[1]=='d') {
+      *evtype = KEYDOWN; 
+    } else if (buf[0]=='k' && buf[1]=='u') {
+      *evtype = KEYUP; 
+    } 
+    s += 2; while (*s==' ') s++; 
+    if (s[0]=='0' && s[1]=='x')
+      *scancode = atoi16(s); 
+
+    close(fd);
 
     return 0; 
 }

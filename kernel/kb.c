@@ -45,7 +45,10 @@ int kb_read(int user_dst, uint64 dst, int off, int n, char blocking, void *conte
     acquire(&the_kb.lock);
     while (n > 0) {     // n:remaining space in userbuf
         // if nonblocking, and nothing to read from the driver, return immediately
-         
+        if (!blocking && (the_kb.r == the_kb.w)) {
+            release(&the_kb.lock);
+            return target - n;
+        }
         /* STUDENT_TODO: your code here */
 
         // wait until interrupt handler has put some
